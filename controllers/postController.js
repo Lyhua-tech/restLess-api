@@ -37,47 +37,70 @@ exports.getAllPost = async (req, res, next) => {
     });
   }
 };
-exports.deleteUser = async(req, res, next) => {
+exports.deleteUser = async (req, res, next) => {
   try {
-    const post = await Post.findByIdAndDelete(req.params._id)
-    if (!post){
+    const post = await Post.findByIdAndDelete(req.params.id);
+    if (!post) {
       res.status(404).json({
-        status: 'fail',
-        message: 'this post is not found!'
-      })
+        status: "fail",
+        message: "this post is not found!",
+      });
     }
     res.status(204).json({
-      status: 'success',
+      status: "success",
       data: null,
-    })
+    });
   } catch (error) {
     res.status(404).json({
-      status: 'fail',
+      status: "fail",
       message: error.message,
-    })
+    });
   }
-}
+};
 
-exports.updateUser = async(req, res, next) => {
+exports.updateUser = async (req, res, next) => {
   try {
     const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
-    })
-    if (!updatedPost){
+    });
+    if (!updatedPost) {
       res.status(404).json({
-        status: 'fail',
-        message: 'this post is not found!'
-      })
+        status: "fail",
+        message: "this post is not found!",
+      });
     }
     res.status(202).json({
-      status: 'success',
+      status: "success",
       post: updatedPost,
-    })
-  }catch (error) {
+    });
+  } catch (error) {
     res.status(400).json({
-      status: 'fail',
+      status: "fail",
       message: error.message,
     });
   }
-}
+};
+exports.getOneUser = async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      res.status(404).json({
+        status: "fail",
+        message: "this post is not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        post,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+};

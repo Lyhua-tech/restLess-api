@@ -4,8 +4,14 @@ const express = require("express");
 const router = express.Router();
 
 router
-  .route("/postNow")
+  .route("/")
   .get(postController.getAllPost)
   .post(postController.createPost);
+
+router
+  .route("/:id")
+  .delete(postController.deleteUser)
+  .patch(postController.updateUser)
+  .get(postController.getOneUser);
 
 module.exports = router;

@@ -8,7 +8,7 @@ const ShowPost = ({ post, onDelete }) => {
           <button
             className="btn btn-circle btn-outline btn-sm"
             // eslint-disable-next-line react/prop-types
-            onClick={() => onDelete(post._id)}
+            onClick={() => onDelete(post._id || post.id)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

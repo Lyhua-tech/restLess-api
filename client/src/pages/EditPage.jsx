@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -22,34 +22,33 @@ const EditPage = () => {
         newPost
       );
       console.log(response);
-      navigate('/')
+      navigate("/");
       // setPost(response); // Adjust according to your API structure
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
   };
 
-  const handleChangeDescription = (event) => {
-    setDescription(event.target.value);
-  };
-
   return (
     <div>
-      <form action="" onSubmit={handleUpdate}>
-        <label htmlFor="">title</label>
+      <form action="" onSubmit={handleUpdate} className="flex flex-col w-full items-center gap-3 mb-3 justify-center">
         <input
           type="text"
           onChange={(e) => setTitle(e.target.value)}
           value={title}
+          placeholder="Title..."
+          className="input input-bordered w-full max-w-xs"
         />
-
-        <label htmlFor="">description</label>
         <input
           type="text"
           onChange={(e) => setDescription(e.target.value)}
           value={description}
+          placeholder="Description..."
+          className="input input-bordered w-full max-w-xs"
         />
-        <button type="submit">Submit</button>
+        <button className="btn btn-success btn-wide" type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );

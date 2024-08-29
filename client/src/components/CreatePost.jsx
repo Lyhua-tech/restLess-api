@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 const CreatePost = (props) => {
+  // eslint-disable-next-line react/prop-types
   const onCreate = props.onCreate;
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -18,19 +19,27 @@ const CreatePost = (props) => {
     setTitle("");
   };
   return (
-    <div>
-      <form action="" onSubmit={handleSubmit}>
-        <label htmlFor="">Title: </label>
-        <input type="text" value={title} onChange={handleChangeTitle} />
-        <label htmlFor="">Description: </label>
+    <>
+      <form action="" onSubmit={handleSubmit} className="flex flex-col w-full items-center gap-3 mb-3 justify-center">
+        <input
+          type="text"
+          value={title}
+          onChange={handleChangeTitle}
+          placeholder="Title..."
+          className="input input-bordered w-full max-w-xs"
+        />
         <input
           type="text"
           value={description}
           onChange={handleChangeDescription}
+          placeholder="Description..."
+          className="input input-bordered w-full max-w-xs"
         />
-        <button type="submit">Add</button>
+        <button className="btn bg-blue-500 hover:bg-blue-400 btn-wide text-white" type="submit">
+          Add
+        </button>
       </form>
-    </div>
+    </>
   );
 };
 

@@ -22,7 +22,7 @@ const HomePage = () => {
   const fetchPosts = async () => {
     try {
       const response = await axios.get("http://localhost:9001/v1/api/post");
-      console.log(response.data.data.posts);
+      // console.log(response.data.data.posts);
       setPosts(response.data.data.posts); // Adjust according to your API structure
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -40,15 +40,6 @@ const HomePage = () => {
       console.error("Error fetching posts:", error);
     }
   }
-
-  // const updateUser = async (id, newPost) => {
-  //   try {
-  //     const response = await axios.patch(`http://localhost:9001/v1/api/post/${id}`, newPost);
-  //     setPosts()
-  //   } catch (error) {
-  //     console.error("Error fetching posts:", error);
-  //   }
-  // }
   return (
     <div>
       <CreatePost onCreate={handleCreatePost} />

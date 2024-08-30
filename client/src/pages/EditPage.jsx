@@ -1,37 +1,32 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useUpdatePostMutation } from "../api/features/userApi";
 
 const EditPage = () => {
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   const { id } = useParams();
   const navigate = useNavigate();
-  console.log(id);
-  const [description, setDescription] = useState("");
+
+  // Use the RTK Query mutation hook
+  const [updatePost] = useUpdatePostMutation();
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const newPost = {
-        title: title,
-        description: description,
-      };
-      const response = await axios.patch(
-        `http://localhost:9001/v1/api/post/${id}`,
-        newPost
-      );
-      console.log(response);
+      const updatedPost = { title, description };
+      await updatePost({ id, ...updatedPost });
+      
       navigate("/");
-      // setPost(response); // Adjust according to your API structure
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      console.error("Error updating post:", error);
     }
   };
 
   return (
     <div>
-      <form action="" onSubmit={handleUpdate} className="flex flex-col w-full items-center gap-3 mb-3 justify-center">
+      <form onSubmit={handleUpdate} className="flex flex-col w-full items-center gap-3 mb-3 justify-center">
         <input
           type="text"
           onChange={(e) => setTitle(e.target.value)}

@@ -1,54 +1,42 @@
-import { useEffect, useState } from "react";
+import React from "react";
+import { useGetPostsQuery, useCreatePostMutation, useDeletePostMutation } from "../api/features/userApi";
 import CreatePost from "../components/CreatePost";
-import axios from "axios";
 import ListPost from "../components/ListPost";
 
 const HomePage = () => {
-  const [posts, setPosts] = useState([]);
-
-  // Fetch posts when the component mounts
-  const fetchPosts = async () => {
-    try {
-      const response = await axios.get("http://localhost:9001/v1/api/post");
-      setPosts(response.data.data.posts); // Adjust according to your API structure
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  // Fetch posts using RTK Query
+  const { data: postsData, error, isLoading , refetch} = useGetPostsQuery();
+  const [createPost] = useCreatePostMutation();
+  const [deletePost] = useDeletePostMutation();
 
   // Handle creating a new post
   const handleCreatePost = async (title, description) => {
     const newPost = { title, description };
     try {
-      await axios.post(
-        "http://localhost:9001/v1/api/post",
-        newPost
-      );
-      // Fetch the latest posts after a new post is created
-      fetchPosts(); 
+      await createPost(newPost);
+      refetch();
     } catch (error) {
       console.error("Error adding post:", error);
     }
   };
 
   // Handle deleting a post
-  const deletePost = async (id) => {
+  const handleDeletePost = async (id) => {
     try {
-      await axios.delete(`http://localhost:9001/v1/api/post/${id}`);
-      setPosts((prevPosts) => prevPosts.filter(post => post.id !== id && post._id !== id));
+      await deletePost(id);
+      refetch();
     } catch (error) {
       console.error("Error deleting post:", error);
     }
   };
 
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching posts: {error.message}</div>;
+
   return (
     <div>
       <CreatePost onCreate={handleCreatePost} />
-      <ListPost posts={posts} onDelete={deletePost} />
+      <ListPost posts={postsData?.data?.posts || []} onDelete={handleDeletePost} />
     </div>
   );
 };

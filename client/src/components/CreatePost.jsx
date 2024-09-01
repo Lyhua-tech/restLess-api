@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { TextField, Box, Button } from "@mui/material";
 
 const CreatePost = (props) => {
   // eslint-disable-next-line react/prop-types
@@ -20,25 +21,46 @@ const CreatePost = (props) => {
   };
   return (
     <>
-      <form action="" onSubmit={handleSubmit} className="flex flex-col w-full items-center gap-3 mb-3 justify-center">
-        <input
+      <Box
+        onSubmit={handleSubmit}
+        component="form"
+        autoComplete="on"
+        noValidate
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          maxWidth: "300px",
+          mx: "auto",
+          gap: 2,
+        }}
+      >
+        <TextField
+          color="success"
+          label="Post"
+          variant="outlined"
           type="text"
           value={title}
           onChange={handleChangeTitle}
           placeholder="Title..."
-          className="input input-bordered w-full max-w-xs"
         />
-        <input
+        <TextField
+          color="success"
+          label="Description"
+          variant="outlined"
           type="text"
           value={description}
           onChange={handleChangeDescription}
           placeholder="Description..."
-          className="input input-bordered w-full max-w-xs"
         />
-        <button className="btn bg-blue-500 hover:bg-blue-400 btn-wide text-white" type="submit">
+        <Button
+          variant="contained"
+          color="success"
+          type="submit"
+          sx={{ py: 2, fontSize: 15 }}
+        >
           Add
-        </button>
-      </form>
+        </Button>
+      </Box>
     </>
   );
 };

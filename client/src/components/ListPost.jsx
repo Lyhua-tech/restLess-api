@@ -1,3 +1,4 @@
+import { Grid } from "@mui/material";
 import ShowPost from "./ShowPost";
 
 // eslint-disable-next-line react/prop-types
@@ -13,19 +14,13 @@ const ListPost = ({ posts, onDelete }) => {
     }
 
     const key = post.id || post._id; // Ensure we're using a unique key
-    return (
-      <ShowPost 
-        key={key} 
-        post={post} 
-        onDelete={onDelete} 
-      />
-    );
+    return <ShowPost key={key} post={post} onDelete={onDelete} />;
   });
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3">
+    <Grid container spacing={2} gap={3}>
       {renderPost}
-    </div>
+    </Grid>
   );
 };
 

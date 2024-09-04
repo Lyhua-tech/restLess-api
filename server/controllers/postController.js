@@ -22,10 +22,37 @@ exports.createPost = async (req, res, next) => {
 
 exports.getAllPost = async (req, res, next) => {
   try {
-    const posts = await Post.find();
+    let query =  Post.find();
+    const { cursor, limit = 10 } = req.query;
+    let queries = {};
+    if (req.query.select) {
+      const fields = req.query.select.split(',').join(" ");
+      query = query.select(fields)
+    }
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    }else {
+      // Default sort order if no sort parameter is provided
+      query = query.sort({ _id: -1 });
+    }
+    // If a cursor is provided, add it to the query
+    if (cursor) {
+      queries._id = { $gt: cursor };
+      query = query.find(queries).limit(parseInt(limit))
+    }
+    
+    const posts = await query;
+    
+    // Extract the next and previous cursor from the result
+    const prevCursor = cursor && posts.length > 0 ? posts[0]._id : null;
+    const nextCursor  = posts.length > 0 ? posts[posts.length - 1]._id : null;
+
     res.status(200).json({
       status: "success",
       data: {
+        prevCursor,
+        nextCursor,
         result: posts.length,
         posts,
       },

@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import ShowPost from "./ShowPost";
 
 // eslint-disable-next-line react/prop-types
-const ListPost = ({ posts, onDelete }) => {
+const ListPost = ({ posts, onDelete, onIncrement }) => {
   if (!posts || !Array.isArray(posts)) {
     return <div>No posts available</div>;
   }
@@ -14,7 +14,7 @@ const ListPost = ({ posts, onDelete }) => {
     }
 
     const key = post.id || post._id; // Ensure we're using a unique key
-    return <ShowPost key={key} post={post} onDelete={onDelete} />;
+    return <ShowPost key={key} post={post} onDelete={onDelete} onIncrement={onIncrement}/>;
   });
 
   return (

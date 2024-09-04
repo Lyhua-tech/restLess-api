@@ -1,17 +1,18 @@
-import React from "react";
 import {
   useGetPostsQuery,
   useCreatePostMutation,
   useDeletePostMutation,
+  useUpdatePostMutation
 } from "../api/features/userApi";
 import CreatePost from "../components/CreatePost";
 import ListPost from "../components/ListPost";
 
 const HomePage = () => {
   // Fetch posts using RTK Query
-  const { data: postsData, error, isLoading } = useGetPostsQuery();
+  const { data, error, isLoading } = useGetPostsQuery();
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
+  const [updatePost] = useUpdatePostMutation();
 
   // Handle creating a new post
   const handleCreatePost = async (title, description) => {
@@ -32,6 +33,8 @@ const HomePage = () => {
     }
   };
 
+  
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching posts: {error.message}</div>;
 
@@ -39,7 +42,7 @@ const HomePage = () => {
     <div>
       <CreatePost onCreate={handleCreatePost} />
       <ListPost
-        posts={postsData?.data?.posts || []}
+        posts={data?.data?.posts || []}
         onDelete={handleDeletePost}
       />
     </div>

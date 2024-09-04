@@ -53,10 +53,15 @@ const CreatePost = (props) => {
           placeholder="Description..."
         />
         <Button
-          variant="contained"
-          color="success"
+          variant="outlined"
           type="submit"
-          sx={{ py: 2, fontSize: 15 }}
+          sx={{ py: 2,borderColor: "#B53389",
+            color: "#B53389",
+            "&:hover": {
+              backgroundColor: "#B55795",
+              color: "white"
+            },
+            fontSize: 16}}
         >
           Add
         </Button>

@@ -1,3 +1,4 @@
+const ApiFeature = require('../utils/ApiFeature');
 const Post = require("../models/postModel");
 
 exports.createPost = async (req, res, next) => {
@@ -22,31 +23,21 @@ exports.createPost = async (req, res, next) => {
 
 exports.getAllPost = async (req, res, next) => {
   try {
-    let query =  Post.find();
     const { cursor, limit = 10 } = req.query;
-    let queries = {};
-    if (req.query.select) {
-      const fields = req.query.select.split(',').join(" ");
-      query = query.select(fields)
-    }
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-    }else {
-      // Default sort order if no sort parameter is provided
-      query = query.sort({ _id: -1 });
-    }
-    // If a cursor is provided, add it to the query
-    if (cursor) {
-      queries._id = { $gt: cursor };
-      query = query.find(queries).limit(parseInt(limit))
-    }
     
-    const posts = await query;
-    
+    // Create ApiFeature instance and chain methods
+    const feature = new ApiFeature(Post.find(), req.query)
+      .filtering()
+      .sorting()
+      .limitFields()
+      .pagination(cursor, limit);
+
+    // Execute query
+    const posts = await feature.query;
+
     // Extract the next and previous cursor from the result
     const prevCursor = cursor && posts.length > 0 ? posts[0]._id : null;
-    const nextCursor  = posts.length > 0 ? posts[posts.length - 1]._id : null;
+    const nextCursor = posts.length > 0 ? posts[posts.length - 1]._id : null;
 
     res.status(200).json({
       status: "success",
@@ -64,6 +55,7 @@ exports.getAllPost = async (req, res, next) => {
     });
   }
 };
+
 exports.deleteUser = async (req, res, next) => {
   try {
     const post = await Post.findByIdAndDelete(req.params.id);

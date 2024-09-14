@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useGetPostsQuery, useCreatePostMutation, useDeletePostMutation } from "../api/features/userApi";
+import React, { useState, useEffect } from "react";
+import {
+  useGetPostsQuery,
+  useCreatePostMutation,
+  useDeletePostMutation,
+} from "../api/features/userApi";
 import CreatePost from "../components/CreatePost";
 import ListPost from "../components/ListPost";
 
 const HomePage = () => {
   const [page, setPage] = useState(1);
-  const [limit] = useState(3); // Fixed limit for this example
+  const [limit] = useState(4); // Set limit to 2 to show 2 posts per page
 
   // Fetch posts with current page and limit
   const { data, error, isLoading, refetch } = useGetPostsQuery({ page, limit });
@@ -16,7 +20,7 @@ const HomePage = () => {
   useEffect(() => {
     refetch(); // Refetch data when page or limit changes
     // Update URL without refreshing the page
-    window.history.replaceState(null, '', `?page=${page}`);
+    window.history.replaceState(null, "", `?page=${page}`);
   }, [page, limit, refetch]);
 
   const handleCreatePost = async (title, description) => {
@@ -39,12 +43,15 @@ const HomePage = () => {
   };
 
   const handleNextPage = () => {
-    setPage(prevPage => prevPage + 1);
+    if (data && data.data.posts.length === limit) {
+      // Ensure next page is valid
+      setPage((prevPage) => prevPage + 1);
+    }
   };
 
   const handlePreviousPage = () => {
     if (page > 1) {
-      setPage(prevPage => prevPage - 1);
+      setPage((prevPage) => prevPage - 1);
     }
   };
 
@@ -55,14 +62,17 @@ const HomePage = () => {
     <div>
       <CreatePost onCreate={handleCreatePost} />
       <ListPost
-        posts={data?.data?.posts || []}
+        posts={data?.data?.posts || []} // Pass the posts array directly to ListPost
         onDelete={handleDeletePost}
       />
       <div>
         <button onClick={handlePreviousPage} disabled={page === 1}>
           Previous
         </button>
-        <button onClick={handleNextPage} disabled={data && data.data.posts.length < limit}>
+        <button
+          onClick={handleNextPage}
+          disabled={data && data.data.posts.length < limit}
+        >
           Next
         </button>
       </div>

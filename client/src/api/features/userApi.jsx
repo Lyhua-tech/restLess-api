@@ -6,7 +6,7 @@ export const postsApi = createApi({
   tagTypes: ["Post"],
   endpoints: (builder) => ({
     getPosts: builder.query({
-      query: ({ page = 1, limit = 3 }) => `post?page=${page}&limit=${limit}`,
+      query: ({ page = 1, limit = 1 }) => `post?page=${page}&limit=${limit}`,
 
       providesTags: (result) =>
         result && Array.isArray(result.data.posts)

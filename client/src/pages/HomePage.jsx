@@ -9,25 +9,24 @@ import ListPost from "../components/ListPost";
 
 const HomePage = () => {
   const [page, setPage] = useState(1);
-  const [limit] = useState(4); // Set limit to 2 to show 2 posts per page
+  const [limit] = useState(4); // Limit the number of posts per page
+  const [sortBy, setSortBy] = useState(null); // State for sorting posts
 
-  // Fetch posts with current page and limit
-  const { data, error, isLoading, refetch } = useGetPostsQuery({ page, limit });
+  // Fetch posts with current page, limit, and sortBy
+  const { data, error, isLoading } = useGetPostsQuery({ page, limit, sortBy });
 
   const [createPost] = useCreatePostMutation();
   const [deletePost] = useDeletePostMutation();
 
+  // Update URL when the page changes
   useEffect(() => {
-    refetch(); // Refetch data when page or limit changes
-    // Update URL without refreshing the page
-    window.history.replaceState(null, "", `?page=${page}`);
-  }, [page, limit, refetch]);
+    window.history.replaceState(null, "", `?page=${page}&sort=${sortBy || ''}`);
+  }, [page, sortBy]);
 
   const handleCreatePost = async (title, description) => {
     const newPost = { title, description };
     try {
-      await createPost(newPost);
-      refetch(); // Optionally refetch after creating a post
+      await createPost(newPost); // No need to refetch manually
     } catch (error) {
       console.error("Error adding post:", error);
     }
@@ -35,16 +34,14 @@ const HomePage = () => {
 
   const handleDeletePost = async (id) => {
     try {
-      await deletePost(id);
-      refetch(); // Optionally refetch after deleting a post
+      await deletePost(id); // No need to refetch manually
     } catch (error) {
       console.error("Error deleting post:", error);
     }
   };
 
   const handleNextPage = () => {
-    if (data && data.data.posts.length === limit) {
-      // Ensure next page is valid
+    if (data?.data.posts.length === limit) {
       setPage((prevPage) => prevPage + 1);
     }
   };
@@ -53,6 +50,10 @@ const HomePage = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
     }
+  };
+
+  const handleSortByLikes = () => {
+    setSortBy((prevSort) => (prevSort === "likeCount" ? null : "likeCount"));
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -71,9 +72,14 @@ const HomePage = () => {
         </button>
         <button
           onClick={handleNextPage}
-          disabled={data && data.data.posts.length < limit}
+          disabled={data?.data.posts.length < limit}
         >
           Next
+        </button>
+      </div>
+      <div>
+        <button onClick={handleSortByLikes}>
+          Sort by Likes {sortBy === "likeCount" ? "(Active)" : ""}
         </button>
       </div>
     </div>

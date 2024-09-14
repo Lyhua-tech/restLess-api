@@ -1,3 +1,4 @@
+import React from 'react';
 import { Grid } from "@mui/material";
 import ShowPost from "./ShowPost";
 
@@ -7,14 +8,21 @@ const ListPost = ({ posts, onDelete, onIncrement }) => {
     return <div>No posts available</div>;
   }
 
-  const renderPost = posts.map((post, index) => {
+  const renderPost = posts.map((post) => {
     if (!post || (!post.id && !post._id)) {
       console.warn("Missing id for post", post);
       return null; // Skip rendering this post if it has no valid id
     }
 
     const key = post.id || post._id; // Ensure we're using a unique key
-    return <ShowPost key={key} post={post} onDelete={onDelete} onIncrement={onIncrement}/>;
+    return (
+      <ShowPost
+        key={key}
+        post={post}
+        onDelete={onDelete}
+        onIncrement={onIncrement}
+      />
+    );
   });
 
   return (

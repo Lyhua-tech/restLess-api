@@ -1,4 +1,4 @@
-const ApiFeature = require('../utils/ApiFeature');
+const ApiFeature = require("../utils/ApiFeature");
 const Post = require("../models/postModel");
 
 exports.createPost = async (req, res, next) => {
@@ -24,13 +24,13 @@ exports.createPost = async (req, res, next) => {
 exports.getAllPost = async (req, res, next) => {
   try {
     const { cursor, limit = 10 } = req.query;
-    
+
     // Create ApiFeature instance and chain methods
     const feature = new ApiFeature(Post.find(), req.query)
       .filtering()
       .sorting()
       .limitFields()
-      .pagination(cursor, limit);
+      .pagination();
 
     // Execute query
     const posts = await feature.query;

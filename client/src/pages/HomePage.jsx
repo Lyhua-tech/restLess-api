@@ -20,7 +20,7 @@ const HomePage = () => {
 
   // Update URL when the page changes
   useEffect(() => {
-    window.history.replaceState(null, "", `?page=${page}&sort=${sortBy || ''}`);
+    window.history.replaceState(null, "", `?page=${page}&sort=${sortBy || ""}`);
   }, [page, sortBy]);
 
   const handleCreatePost = async (title, description) => {
@@ -62,10 +62,7 @@ const HomePage = () => {
   return (
     <div>
       <CreatePost onCreate={handleCreatePost} />
-      <ListPost
-        posts={data?.data?.posts || []} // Pass the posts array directly to ListPost
-        onDelete={handleDeletePost}
-      />
+      <ListPost posts={data?.data?.posts || []} onDelete={handleDeletePost} />
       <div>
         <button onClick={handlePreviousPage} disabled={page === 1}>
           Previous
